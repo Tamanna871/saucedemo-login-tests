@@ -1,4 +1,4 @@
-const PASSWORD = 'secret_sauce';
+export const PASSWORD = 'secret_sauce';
 
 export const users = {
     standard: { username: 'standard_user', password: PASSWORD },
@@ -9,3 +9,9 @@ export const users = {
     visual: { username: 'visual_user', password: PASSWORD },
 };
 
+export const invalidUsers = {
+    unknown: { username: 'wrong_user', password: PASSWORD },
+    wrongPassword: { username: 'standard_user', password: '123456' },
+    capitalisedUsername: { username: 'STANDARD_USER', password: PASSWORD },
+    capitalisedPassword: { username: 'standard_user', password: PASSWORD.toUpperCase() },
+};

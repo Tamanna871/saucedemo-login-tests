@@ -27,11 +27,11 @@ test.describe('Login page: elements', () => {
     });
 });
 
-test.describe('Login page: Valid login', () => {
+test.describe('Login page: valid login', () => {
     let loginPage;
     let productsPage;
 
-    test.beforeEach(async ({ page }) =>{
+    test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
         productsPage = new ProductsPage(page);
         await loginPage.goto();
