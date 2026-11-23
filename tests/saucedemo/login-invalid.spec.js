@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
-import { errors } from '../../test-data/messages';
-import { PASSWORD, users, invalidUsers } from '../../test-data/users';
+import { invalidLoginCases } from '../../test-data/login-cases';
 
 test.describe('Login page: invalid login', () => {
     let loginPage;
@@ -11,56 +10,16 @@ test.describe('Login page: invalid login', () => {
         await loginPage.goto();
     });
 
-    test('empty username and password shows username required', async () => {
-        await loginPage.login('', '');
+    for (const { name, username, password, error } of invalidLoginCases) {
+        test(`${name} shows the expected error`, async () => {
+            await loginPage.login(username, password);
 
-        await expect(loginPage.errorMessage).toHaveText(errors.usernameRequired);
-    });
-
-    test('username without password shows password required', async () => {
-        await loginPage.login(users.standard.username, '');
-
-        await expect(loginPage.errorMessage).toHaveText(errors.passwordRequired);
-    });
-
-    test('password without username shows username required', async () => {
-        await loginPage.login('', PASSWORD);
-
-        await expect(loginPage.errorMessage).toHaveText(errors.usernameRequired);
-    });
-
-    test('unknown username shows invalid credentials', async () => {
-        await loginPage.login(invalidUsers.unknown.username, invalidUsers.unknown.password);
-
-        await expect(loginPage.errorMessage).toHaveText(errors.invalidCredentials);
-    });
-
-    test('wrong password shows invalid credentials', async () => {
-        await loginPage.login(invalidUsers.wrongPassword.username, invalidUsers.wrongPassword.password);
-
-        await expect(loginPage.errorMessage).toHaveText(errors.invalidCredentials);
-    });
-
-    test('username is case sensitive', async () => {
-        await loginPage.login(invalidUsers.capitalisedUsername.username, invalidUsers.capitalisedUsername.password);
-
-        await expect(loginPage.errorMessage).toHaveText(errors.invalidCredentials);
-    });
-
-    test('password is case sensitive', async () => {
-        await loginPage.login(invalidUsers.capitalisedPassword.username, invalidUsers.capitalisedPassword.password);
-
-        await expect(loginPage.errorMessage).toHaveText(errors.invalidCredentials);
-    });
-
-    test('locked out user cannot log in', async () => {
-        await loginPage.login(users.lockedOut.username, users.lockedOut.password);
-
-        await expect(loginPage.errorMessage).toHaveText(errors.lockedOut);
-    });
+            await expect(loginPage.errorMessage).toHaveText(error);
+        });
+    }
 
     test('failed login keeps the user on the login page', async () => {
-        await loginPage.login(invalidUsers.unknown.username, invalidUsers.unknown.password);
+        await loginPage.login('wrong_user', 'wrong_password');
 
         await expect(loginPage.loginButton).toBeVisible();
     });
