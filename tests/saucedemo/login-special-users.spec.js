@@ -1,12 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../pages/LoginPage';
-import { ProductsPage } from '../../pages/ProductsPage';
+import { test, expect } from '../../fixtures/fixtures';
 import { users } from '../../test-data/users';
 
-test('performance glitch user reaches the products page, slowly', async ({ page }) => {
-    const loginPage = new LoginPage(page); 
-    const productsPage = new ProductsPage(page);
-
+test('performance glitch user reaches the products page, slowly', async ({ loginPage, productsPage }) => {
     await loginPage.goto();
     await loginPage.login(users.performanceGlitch.username, users.performanceGlitch.password);
 
